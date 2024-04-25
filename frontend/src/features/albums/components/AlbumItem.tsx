@@ -6,21 +6,23 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import imageNotAvailable from '../../../../assets/imageNotAvailable.png';
 import {apiURL} from "../../../constants.ts";
-import {CardMedia, styled} from "@mui/material";
+import {CardMedia, styled, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
+import {Artist} from "../../../types";
 
 interface Props {
-    id: string;
-    name: string;
+    artist: Artist;
+    title: string;
+    issueDate: number;
     image: string | null;
 }
 
 const ImageCardMedia = styled(CardMedia)({
     height: 0,
-    paddingTop: '56.25%' //16:9
+        paddingTop: '100%'
 });
 
-const ArtistItem: React.FC<Props> = ({id, name, image}) => {
+const AlbumItem: React.FC<Props> = ({artist, title, image, issueDate}) => {
     let cardImage = imageNotAvailable;
 
     if (image) {
@@ -28,13 +30,25 @@ const ArtistItem: React.FC<Props> = ({id, name, image}) => {
     }
 
     return (
-        <List component={Link} to={`/albums/${id}`} sx={{ width: '100%', bgcolor: 'background.paper', color: 'inherit', textDecoration: 'none' }} >
+        <List component={Link} to={`/albums/${artist._id}`} sx={{ width: '100%', bgcolor: 'background.paper', color: 'inherit', textDecoration: 'none' }} >
             <ListItem alignItems="flex-start">
                 <ListItemAvatar sx={{ marginRight: '10px' }}>
                     <ImageCardMedia image={cardImage}/>
                 </ListItemAvatar>
                 <ListItemText
-                    primary={name}
+                    primary={title}
+                    secondary={
+                        <React.Fragment>
+                            <Typography
+                                sx={{ display: 'inline' }}
+                                component="span"
+                                variant="body2"
+                                color="text.primary"
+                            >
+                                {issueDate}
+                            </Typography>
+                        </React.Fragment>
+                    }
                 />
             </ListItem>
             <Divider variant="inset" component="li" />
@@ -42,4 +56,4 @@ const ArtistItem: React.FC<Props> = ({id, name, image}) => {
     );
 };
 
-export default ArtistItem;
+export default AlbumItem;
