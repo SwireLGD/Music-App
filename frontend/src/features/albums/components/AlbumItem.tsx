@@ -29,6 +29,10 @@ const AlbumItem: React.FC<Props> = ({artist, title, image, issueDate}) => {
         cardImage = apiURL + '/' + image;
     }
 
+    const formattedDate = new Date(issueDate * 1000).toLocaleDateString("en-US", {
+        year: 'numeric', month: 'numeric', day: 'numeric'
+    });
+
     return (
         <List component={Link} to={`/albums/${artist._id}`} sx={{ width: '100%', bgcolor: 'background.paper', color: 'inherit', textDecoration: 'none' }} >
             <ListItem alignItems="flex-start">
@@ -45,7 +49,7 @@ const AlbumItem: React.FC<Props> = ({artist, title, image, issueDate}) => {
                                 variant="body2"
                                 color="text.primary"
                             >
-                                {issueDate}
+                                {formattedDate}
                             </Typography>
                         </React.Fragment>
                     }
