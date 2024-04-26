@@ -11,10 +11,12 @@
 
             let tracks;
 
+            const sorting = {number: -1 as -1 | 1};
+
             if (album) {
-                tracks = await Track.find({ album }).populate('album');
+                tracks = await Track.find({ album }).populate('album').sort(sorting);
             } else {
-                tracks = await Track.find().populate('album');
+                tracks = await Track.find().populate('album').sort(sorting);
             }
 
             return res.send(tracks);

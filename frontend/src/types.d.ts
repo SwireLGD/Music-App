@@ -11,3 +11,11 @@ export interface Album {
     issueDate: number;
     artist: Artist;
 }
+
+export interface Track {
+    _id: string;
+    number: number;
+    title: string;
+    duration: string;
+    album: Album;
+}
