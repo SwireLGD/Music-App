@@ -1,8 +1,6 @@
     import express from "express";
     import Track from "../models/Track";
     import {TrackMutation} from "../types";
-    import Album from "../models/Album";
-
     const tracksRouter = express.Router();
 
     tracksRouter.get('/', async (req, res) => {
