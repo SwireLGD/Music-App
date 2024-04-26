@@ -24,7 +24,7 @@ const ArtistItem: React.FC<Props> = ({id, name, image}) => {
     let cardImage = imageNotAvailable;
 
     if (image) {
-        cardImage = apiURL + '/' + image;
+        cardImage = apiURL + image;
     }
 
     return (

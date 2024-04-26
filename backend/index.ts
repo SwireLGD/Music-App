@@ -14,8 +14,7 @@ const port = 8000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
-
+app.use('/public', express.static('public'));
 app.use('/albums', albumsRouter);
 app.use('/artists', artistsRouter);
 app.use ('/tracks', tracksRouter);

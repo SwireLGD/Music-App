@@ -1,19 +1,19 @@
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {useEffect} from "react";
-import {CardMedia, Grid, styled, Typography} from "@mui/material";
+import {CardMedia, CircularProgress, Grid, styled, Typography} from "@mui/material";
 import {useParams} from "react-router-dom";
-import {selectTracks} from "./tracksSlice.ts";
+import {selectFetchLoading, selectTracks} from "./tracksSlice.ts";
 import {fetchTracks} from "./tracksThunks.ts";
 import TrackItem from "./components/TrackItem.tsx";
 import imageNotAvailable from "../../../assets/imageNotAvailable.png";
 import {apiURL} from "../../constants.ts";
 
 
-const Albums = () => {
+const Tracks = () => {
     const {albumId} = useParams();
     const dispatch = useAppDispatch();
     const tracks = useAppSelector(selectTracks);
-    const AlbumName = tracks.length > 0 ? tracks[0].album.title : "Album";
+    const isLoading = useAppSelector(selectFetchLoading);
 
     useEffect(() => {
         if (albumId) {
@@ -23,40 +23,51 @@ const Albums = () => {
 
     const ImageCardMedia = styled(CardMedia)({
         height: 0,
-        paddingTop: '56.25%'
+        paddingTop: '100%'
     });
 
     let cardImage = imageNotAvailable;
+    let artistName = "Artist";
+    let albumName = "Album";
 
-    if (tracks[0].album.image) {
-        cardImage = apiURL + '/' + tracks[0].album.image;
+    if (tracks.length > 0 && tracks[0].album) {
+        artistName = tracks[0].album.artist.name;
+        albumName = tracks[0].album.title;
+        if (tracks[0].album.image) {
+            cardImage = apiURL + tracks[0].album.image;
+        }
     }
 
     return (
         <Grid container direction="column" gap={2}>
             <Grid item container justifyContent="space-between" alignItems="center">
                 <Grid item>
-                    <Typography variant="h4">{tracks[0].album.artist.name}</Typography>
                     <ImageCardMedia
                         image={cardImage}
                     />
-                    <Typography variant="h4">{AlbumName}</Typography>
+                    <Typography variant="h4">{artistName}</Typography>
+                    <Typography variant="h4">{albumName}</Typography>
                 </Grid>
             </Grid>
 
-            <Grid item container gap={2}>
-                {tracks.map(track => (
-                    <TrackItem
-                        key={track._id}
-                        number={track.number}
-                        album={track.album}
-                        title={track.title}
-                        duration={track.duration}
-                    />
-                ))}
-            </Grid>
+            {isLoading ? (
+                <Grid item container justifyContent="center">
+                    <CircularProgress />
+                </Grid>
+            ) : (
+                <Grid item container gap={2}>
+                    {tracks.map(track => (
+                        <TrackItem
+                            key={track._id}
+                            number={track.number}
+                            title={track.title}
+                            duration={track.duration}
+                        />
+                    ))}
+                </Grid>
+            )}
         </Grid>
     );
 };
 
-export default Albums;
+export default Tracks;

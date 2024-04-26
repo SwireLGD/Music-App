@@ -1,8 +1,8 @@
-import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
-import {selectAlbums} from "./albumsSlice.ts";
+import {useAppDispatch, useAppSelector,} from "../../app/hooks.ts";
+import {selectAlbums, selectFetchLoading} from "./albumsSlice.ts";
 import {useEffect} from "react";
 import {fetchAlbums} from "./albumsThunks.ts";
-import {Grid, Typography} from "@mui/material";
+import {CircularProgress, Grid, Typography} from "@mui/material";
 import AlbumItem from "./components/AlbumItem.tsx";
 import {useParams} from "react-router-dom";
 
@@ -12,6 +12,7 @@ const Albums = () => {
     const dispatch = useAppDispatch();
     const albums = useAppSelector(selectAlbums);
     const artistName = albums.length > 0 ? albums[0].artist.name : "Artist";
+    const isLoading = useAppSelector(selectFetchLoading);
 
     useEffect(() => {
         if  (artistId) {
@@ -27,17 +28,24 @@ const Albums = () => {
                 </Grid>
             </Grid>
 
-            <Grid item container gap={2}>
-                {albums.map(album => (
-                    <AlbumItem
-                        key={album._id}
-                        artist={album.artist}
-                        title={album.title}
-                        image={album.image}
-                        issueDate={album.issueDate}
-                    />
-                ))}
-            </Grid>
+            {isLoading ? (
+                <Grid item container justifyContent="center">
+                    <CircularProgress />
+                </Grid>
+            ) : (
+                <Grid item container gap={2}>
+                    {albums.map(album => (
+                        <AlbumItem
+                            key={album._id}
+                            _id={album._id}
+                            artist={album.artist}
+                            title={album.title}
+                            image={album.image}
+                            issueDate={album.issueDate}
+                        />
+                    ))}
+                </Grid>
+            )}
         </Grid>
     );
 };

@@ -11,6 +11,7 @@ import {Link} from "react-router-dom";
 import {Artist} from "../../../types";
 
 interface Props {
+    _id: string;
     artist: Artist;
     title: string;
     issueDate: number;
@@ -22,11 +23,11 @@ const ImageCardMedia = styled(CardMedia)({
         paddingTop: '100%'
 });
 
-const AlbumItem: React.FC<Props> = ({artist, title, image, issueDate}) => {
+const AlbumItem: React.FC<Props> = ({_id, title, image, issueDate}) => {
     let cardImage = imageNotAvailable;
 
     if (image) {
-        cardImage = apiURL + '/' + image;
+        cardImage = apiURL + image;
     }
 
     const formattedDate = new Date(issueDate * 1000).toLocaleDateString("en-US", {
@@ -34,7 +35,7 @@ const AlbumItem: React.FC<Props> = ({artist, title, image, issueDate}) => {
     });
 
     return (
-        <List component={Link} to={`/albums/${artist._id}`} sx={{ width: '100%', bgcolor: 'background.paper', color: 'inherit', textDecoration: 'none' }} >
+        <List component={Link} to={`/tracks/${_id}`} sx={{ width: '100%', bgcolor: 'background.paper', color: 'inherit', textDecoration: 'none' }} >
             <ListItem alignItems="flex-start">
                 <ListItemAvatar sx={{ marginRight: '10px' }}>
                     <ImageCardMedia image={cardImage}/>

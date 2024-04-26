@@ -9,7 +9,7 @@
 
             let tracks;
 
-            const sorting = {number: -1 as -1 | 1};
+            const sorting = {number: 1 as -1 | 1};
 
             if (album) {
                 tracks = await Track.find({ album }).populate('album').sort(sorting);
