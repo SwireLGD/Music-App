@@ -8,9 +8,11 @@ interface Props {
     number: number;
     title: string;
     duration: string;
+    trackId: string;
+    onTrackPlay: (trackId: string) => void;
 }
 
-const TrackItem: React.FC<Props> = ({ number, title, duration}) => {
+const TrackItem: React.FC<Props> = ({ number, title, duration, trackId, onTrackPlay}) => {
 
     return (
         <List sx={{ width: '100%', bgcolor: 'background.paper' }}>

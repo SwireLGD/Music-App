@@ -26,7 +26,7 @@ const Login = () => {
         event.preventDefault();
         await dispatch(login(state)).unwrap();
         navigate('/');
-    };
+    }
 
     return (
         <Container component="main" maxWidth="xs">

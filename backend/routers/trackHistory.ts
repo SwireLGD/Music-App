@@ -3,21 +3,14 @@ import User from "../models/User";
 import Track from "../models/Track";
 import TrackHistory from "../models/TrackHistory";
 import {TrackHistoryMutation} from "../types";
+import auth, {RequestWithUser} from "../middleware/auth";
 
 const trackHistoryRouter = express.Router();
-
-trackHistoryRouter.post('/', async (req, res) => {
-    const token = req.get('Authorization');
-    if (!token) {
-        return res.status(401).send('No token present');
+trackHistoryRouter.use(auth)
+trackHistoryRouter.post('/', async (req: RequestWithUser, res) => {
+    if (!req.user) {
+        return res.status(401).send('Unauthorized: No user found');
     }
-
-    const user = await User.findOne({token: token});
-
-    if (!user) {
-        return res.status(401).send('Invalid token');
-    }
-
     const track = req.body.track;
 
     if (!track) {
@@ -31,7 +24,7 @@ trackHistoryRouter.post('/', async (req, res) => {
     }
 
     const trackHistoryData: TrackHistoryMutation = {
-        user: user._id,
+        user: req.user._id,
         track: track,
     };
 
@@ -42,6 +35,23 @@ trackHistoryRouter.post('/', async (req, res) => {
         return res.send(trackHistory);
     } catch (e) {
         return res.status(400).send(e);
+    }
+});
+
+trackHistoryRouter.get('/history', async (req: RequestWithUser, res) => {
+    if (!req.user) {
+        return res.status(401).send('Authentication required');
+    }
+
+    try {
+        const history = await TrackHistory.find({ user: req.user._id }).sort({ datetime: -1 }).populate('track artist');
+        res.json(history.map(h => ({
+            track: h.track,
+            artist: h.artist,
+            playedAt: h.datetime
+        })));
+    } catch (e) {
+        res.status(500).send(e);
     }
 });
 

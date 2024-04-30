@@ -56,3 +56,14 @@ export interface LoginMutation {
 export interface GlobalError {
     error: string;
 }
+
+export interface PlayTrack {
+    trackId: string;
+    token: string;
+}
+
+export interface PlayedTrack {
+    artist: Artist;
+    title: Track;
+    datetime: Date;
+}

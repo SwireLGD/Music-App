@@ -1,3 +1,5 @@
+import {Types} from "mongoose";
+
 export interface TrackMutation {
     album: string;
     title: string;
@@ -31,6 +33,6 @@ interface UserMethods {
 type UserModel = Model<UserFields, {}, UserMethods>;
 
 export interface TrackHistoryMutation {
-    user: string;
+    user: Types.ObjectId;
     track: string;
 }
