@@ -42,10 +42,10 @@ const Tracks = () => {
         <Grid container direction="column" gap={2}>
             <Grid item container justifyContent="space-between" alignItems="center">
                 <Grid item>
+                    <Typography variant="h4">{artistName}</Typography>
                     <ImageCardMedia
                         image={cardImage}
                     />
-                    <Typography variant="h4">{artistName}</Typography>
                     <Typography variant="h4">{albumName}</Typography>
                 </Grid>
             </Grid>
