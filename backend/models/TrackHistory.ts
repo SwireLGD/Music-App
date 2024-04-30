@@ -2,6 +2,7 @@ import mongoose, {Types} from "mongoose";
 import Track from "./Track";
 import User from "./User";
 import Artist from "./Artist";
+import Album from "./Album";
 
 const Schema = mongoose.Schema;
 
@@ -26,14 +27,24 @@ const TrackHistorySchema = new Schema({
     },
     artist: {
         type: Schema.Types.ObjectId,
-        ref: 'Artist',
-        required: true
+        ref: 'Artist'
     },
     datetime: {
         type: Date,
         required: true,
         default: Date.now
     }
+});
+
+TrackHistorySchema.pre('save', async function(next) {
+    const track = await Track.findById(this.track).populate('album');
+    if (track && track.album) {
+        const album = await Album.findById(track.album);
+        if (album && album.artist) {
+            this.artist = album.artist;
+        }
+    }
+    next();
 });
 
 const TrackHistory = mongoose.model('TrackHistory', TrackHistorySchema);
