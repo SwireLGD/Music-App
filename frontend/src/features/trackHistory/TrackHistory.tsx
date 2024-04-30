@@ -24,6 +24,7 @@ const TrackHistoryList: React.FC = () => {
         return <CircularProgress />;
     }
 
+
     return (
         <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
             {trackHistory.length > 0 ? trackHistory.map((item, index) => (
