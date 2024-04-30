@@ -59,6 +59,7 @@ const Tracks = () => {
                     {tracks.map(track => (
                         <TrackItem
                             key={track._id}
+                            trackId={track._id}
                             number={track.number}
                             title={track.title}
                             duration={track.duration}
