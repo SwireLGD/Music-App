@@ -30,7 +30,8 @@ const Register = () => {
             await dispatch(register(state)).unwrap();
             navigate('/');
         } catch (error) {
-            // error
+            console.error(error);
+            
         }
     };
 
@@ -40,7 +41,7 @@ const Register = () => {
         } catch {
             return undefined;
         }
-    }
+    };
 
     return (
         <Container component="main" maxWidth="xs">

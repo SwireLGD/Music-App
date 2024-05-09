@@ -11,7 +11,7 @@ interface TrackState {
 const initialState: TrackState = {
     items: [],
     fetchLoading: false,
-}
+};
 
 export const tracksSlice = createSlice({
     name: 'tracks',

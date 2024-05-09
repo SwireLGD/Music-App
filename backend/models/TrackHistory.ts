@@ -1,7 +1,6 @@
 import mongoose, {Types} from "mongoose";
 import Track from "./Track";
 import User from "./User";
-import Artist from "./Artist";
 import Album from "./Album";
 
 const Schema = mongoose.Schema;

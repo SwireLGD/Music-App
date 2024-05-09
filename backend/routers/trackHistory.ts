@@ -1,13 +1,12 @@
 import express from "express";
-import User from "../models/User";
 import Track from "../models/Track";
 import TrackHistory from "../models/TrackHistory";
 import {TrackHistoryMutation} from "../types";
 import auth, {RequestWithUser} from "../middleware/auth";
 
 const trackHistoryRouter = express.Router();
-trackHistoryRouter.use(auth)
-trackHistoryRouter.post('/', async (req: RequestWithUser, res) => {
+
+trackHistoryRouter.post('/', auth, async (req: RequestWithUser, res) => {
     if (!req.user) {
         return res.status(401).send('Unauthorized: No user found');
     }
@@ -38,7 +37,7 @@ trackHistoryRouter.post('/', async (req: RequestWithUser, res) => {
     }
 });
 
-trackHistoryRouter.get('/history', async (req: RequestWithUser, res) => {
+trackHistoryRouter.get('/', auth, async (req: RequestWithUser, res) => {
     if (!req.user) {
         return res.status(401).send('Authentication required');
     }

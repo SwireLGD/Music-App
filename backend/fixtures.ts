@@ -20,11 +20,11 @@ const run = async () => {
 
     const [artist1, artist2] = await Artist.create({
         name: 'Within Temptation',
-        image: 'public/fixtures/withinTemptation.jpg',
+        image: '/public/fixtures/withinTemptation.jpg',
         info: 'Dutch symphonic metal band'
     }, {
         name: 'DROELOE',
-        image: 'public/fixtures/droeloe.jpg',
+        image: '/public/fixtures/droeloe.jpg',
         info: 'Dutch electronic music project by Vincent Rooijers'
     });
 
@@ -33,22 +33,22 @@ const run = async () => {
         title: 'Wireless',
         artist: artist1._id,
         issueDate: '1688083200',
-        image: 'public/fixtures/wireless.jpg'
+        image: '/public/fixtures/wireless.jpg'
     } , {
         title: 'Bleed Out',
         artist: artist1._id,
         issueDate: '1697760000',
-        image: 'public/fixtures/bleedOut.jpg'
+        image: '/public/fixtures/bleedOut.jpg'
         }, {
         title: 'A promise is made',
         artist: artist2._id,
         issueDate: '1570752000',
-        image: 'public/fixtures/aPromiseIsMade.jpg'
+        image: '/public/fixtures/aPromiseIsMade.jpg'
         }, {
         title: 'A matter of perspective',
         artist: artist2._id,
         issueDate: '1605225600',
-        image: 'public/fixtures/aMatterOfPerspective.jpg'
+        image: '/public/fixtures/aMatterOfPerspective.jpg'
     });
 
     await Track.create({

@@ -11,7 +11,7 @@ interface ArtistsState {
 const initialState: ArtistsState = {
     items: [],
     fetchLoading: false,
-}
+};
 
 export const artistsSlice = createSlice({
     name: 'artists',

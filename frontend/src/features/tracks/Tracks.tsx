@@ -1,24 +1,32 @@
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {useEffect} from "react";
 import {CardMedia, CircularProgress, Grid, styled, Typography} from "@mui/material";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {selectFetchLoading, selectTracks} from "./tracksSlice.ts";
 import {fetchTracks} from "./tracksThunks.ts";
 import TrackItem from "./components/TrackItem.tsx";
 import imageNotAvailable from "../../../assets/imageNotAvailable.png";
 import {apiURL} from "../../constants.ts";
-
+import { selectUser } from "../users/usersSlice.ts";
 
 const Tracks = () => {
     const {albumId} = useParams();
     const dispatch = useAppDispatch();
     const tracks = useAppSelector(selectTracks);
     const isLoading = useAppSelector(selectFetchLoading);
+    const user = useAppSelector(selectUser); 
+    const navigate = useNavigate();
 
     useEffect(() => {
-        if (albumId) {
-            dispatch(fetchTracks(albumId));
+        if (!user) {
+            navigate('/login'); 
         }
+    }, [user, navigate]);
+
+    useEffect(() => {
+        if (albumId && user) {
+            dispatch(fetchTracks(albumId));
+        } 
     }, [albumId, dispatch]);
 
     const ImageCardMedia = styled(CardMedia)({

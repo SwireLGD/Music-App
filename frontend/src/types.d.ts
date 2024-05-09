@@ -63,7 +63,8 @@ export interface PlayTrack {
 }
 
 export interface PlayedTrack {
+    _id: string;
     artist: Artist;
-    title: Track;
-    datetime: Date;
+    track: Track;
+    playedAt: Date;
 }
