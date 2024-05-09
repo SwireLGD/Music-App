@@ -2,6 +2,8 @@ import express from "express";
 import Album from "../models/Album";
 import {AlbumMutation} from "../types";
 import {imagesUpload} from "../multer";
+import auth, { RequestWithUser } from "../middleware/auth";
+import permit from "../middleware/permit";
 
 const albumsRouter = express.Router();
 
@@ -37,13 +39,13 @@ albumsRouter.get('/:id', async (req, res) => {
     }
 });
 
-
-albumsRouter.post('/', imagesUpload.single('image'), async (req, res) => {
+albumsRouter.post('/', auth, imagesUpload.single('image'), async (req, res) => {
     const albumData: AlbumMutation = {
         title: req.body.title,
         artist: req.body.artist,
         issueDate: req.body.issueDate,
         image: req.file ? req.file.filename : null,
+        isPublished: req.body.isPublished
     };
 
     const album = new Album(albumData);
@@ -53,6 +55,38 @@ albumsRouter.post('/', imagesUpload.single('image'), async (req, res) => {
         return res.send(album);
     } catch (e) {
         return res.status(400).send(e);
+    }
+});
+
+albumsRouter.delete('/:id', auth, permit('admin'), async (req: RequestWithUser, res, next) => {
+    if (!req.user) {
+        return res.status(401).send({ error: 'Authentication is required' });
+    }
+    try {
+        const result = await Album.deleteOne({ _id: req.params.id});
+        if (result.deletedCount === 0) {
+            return res.status(404).send({ error: 'Album not found or unauthorized to delete the item' });
+        }
+        return res.status(204).send();
+    } catch (e) {
+        return next(e);
+    }
+});
+
+albumsRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, res) => {
+    try {
+        const album = await Album.findById(req.params.id);
+        if (!album) {
+            return res.status(404).send({ error: 'Album not found' });
+        }
+
+        album.isPublished = !album.isPublished;
+
+        await album.save();
+
+        return res.send(album);
+    } catch (e) {
+        return res.status(500).send(e);
     }
 });
 

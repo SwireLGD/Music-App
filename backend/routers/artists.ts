@@ -2,6 +2,8 @@ import express from "express";
 import Artist from "../models/Artist";
 import {ArtistMutation} from "../types";
 import {imagesUpload} from "../multer";
+import auth, { RequestWithUser } from "../middleware/auth";
+import permit from "../middleware/permit";
 
 const artistsRouter = express.Router();
 
@@ -14,11 +16,12 @@ artistsRouter.get('/', async (req, res) => {
     }
 });
 
-artistsRouter.post('/', imagesUpload.single('image'), async (req, res) => {
+artistsRouter.post('/', auth, imagesUpload.single('image'), async (req, res) => {
     const artistData: ArtistMutation = {
         name: req.body.name,
         image: req.file ? req.file.filename : null,
-        info: req.body.info
+        info: req.body.info,
+        isPublished: req.body.isPublished
     };
 
     const artist = new Artist(artistData);
@@ -28,6 +31,38 @@ artistsRouter.post('/', imagesUpload.single('image'), async (req, res) => {
         return res.send(artist);
     } catch (e) {
         return res.status(400).send(e);
+    }
+});
+
+artistsRouter.delete('/:id', auth, permit('admin'), async (req: RequestWithUser, res, next) => {
+    if (!req.user) {
+        return res.status(401).send({ error: 'Authentication is required' });
+    }
+    try {
+        const result = await Artist.deleteOne({ _id: req.params.id});
+        if (result.deletedCount === 0) {
+            return res.status(404).send({ error: 'Artist not found or unauthorized to delete the item' });
+        }
+        return res.status(204).send();
+    } catch (e) {
+        return next(e);
+    }
+});
+
+artistsRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, res) => {
+    try {
+        const artist = await Artist.findById(req.params.id);
+        if (!artist) {
+            return res.status(404).send({ error: 'Artist not found' });
+        }
+
+        artist.isPublished = !artist.isPublished;
+
+        await artist.save();
+
+        return res.send(artist);
+    } catch (e) {
+        return res.status(500).send(e);
     }
 });
 
