@@ -20,6 +20,10 @@ const AlbumSchema = new Schema({
         required: true
     },
     image: String || null,
+    isPublished: {
+        type: Boolean,
+        default: false
+    },
 });
 
 const Album = model('Album', AlbumSchema);

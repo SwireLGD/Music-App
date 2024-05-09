@@ -7,7 +7,11 @@ const ArtistSchema = new Schema({
         unique: true
     },
     image: String || null,
-    info: String
+    info: String,
+    isPublished: {
+        type: Boolean,
+        default: false
+    }
 });
 
 const Artist = model('Artist', ArtistSchema);

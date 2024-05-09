@@ -4,12 +4,14 @@ export interface TrackMutation {
     album: string;
     title: string;
     duration?: string;
+    isPublished: boolean;
 }
 
 export interface ArtistMutation {
     name: string;
     image?: string | null;
     info?: string;
+    isPublished: boolean;
 }
 
 export interface AlbumMutation {
@@ -17,12 +19,15 @@ export interface AlbumMutation {
     title: string;
     issueDate: number;
     image?: string | null;
+    isPublished: boolean;
 }
 
 export interface UserFields {
     username: string;
     password: string;
     token: string;
+    role: string;
+    isPublished: boolean;
 }
 
 interface UserMethods {

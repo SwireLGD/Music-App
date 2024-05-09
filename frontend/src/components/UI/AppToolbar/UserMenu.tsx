@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Menu, MenuItem } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { User } from "../../types";
-import { useAppDispatch } from '../../app/hooks';
-import { logout } from '../../features/users/usersThunks';
+import { User } from "../../../types";
+import { useAppDispatch } from '../../../app/hooks';
+import { logout } from '../../../features/users/usersThunks';
 
 interface Props {
     user: User;

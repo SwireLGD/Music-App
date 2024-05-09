@@ -1,5 +1,5 @@
 import Artists from "./features/artists/Artists.tsx";
-import AppToolbar from "./components/AppToolbar/AppToolbar.tsx";
+import AppToolbar from "./components/UI/AppToolbar/AppToolbar.tsx";
 import {Container, Typography} from "@mui/material";
 import Albums from "./features/albums/Albums.tsx";
 import {Route, Routes} from "react-router-dom";
