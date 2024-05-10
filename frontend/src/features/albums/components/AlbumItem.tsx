@@ -6,9 +6,15 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import imageNotAvailable from '../../../../assets/imageNotAvailable.png';
 import {apiURL} from "../../../constants.ts";
-import {CardMedia, styled, Typography} from "@mui/material";
-import {Link} from "react-router-dom";
+import {CardMedia, IconButton, styled, Typography} from "@mui/material";
+import {Link, useNavigate} from "react-router-dom";
 import {Artist} from "../../../types";
+import { useAppDispatch, useAppSelector } from '../../../app/hooks.ts';
+import { deleteAlbum, togglePublished } from '../albumsThunks.ts';
+import { selectUser } from '../../users/usersSlice.ts';
+import DeleteIcon from '@mui/icons-material/Delete';
+import PublishIcon from '@mui/icons-material/Publish';
+import { selectDeleting, selectPublishing } from '../albumsSlice.ts';
 
 interface Props {
     _id: string;
@@ -24,6 +30,12 @@ const ImageCardMedia = styled(CardMedia)({
 });
 
 const AlbumItem: React.FC<Props> = ({_id, title, image, issueDate}) => {
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(selectUser);
+    const publishing = useAppSelector(selectPublishing);
+    const deleting = useAppSelector(selectDeleting);
+    const navigate = useNavigate();
+
     let cardImage = imageNotAvailable;
 
     if (image) {
@@ -34,9 +46,20 @@ const AlbumItem: React.FC<Props> = ({_id, title, image, issueDate}) => {
         year: 'numeric', month: 'numeric', day: 'numeric'
     });
 
+    const handleDelete = () => {
+        dispatch(deleteAlbum(_id));
+        navigate('/');
+    };
+
+    const handleTogglePublished = () => {
+        dispatch(togglePublished(_id));
+        navigate('/');
+    };
+
     return (
-        <List component={Link} to={`/tracks/${_id}`} sx={{ width: '100%', bgcolor: 'background.paper', color: 'inherit', textDecoration: 'none' }} >
-            <ListItem alignItems="flex-start">
+        <List sx={{ width: '100%', bgcolor: 'background.paper', color: 'inherit', textDecoration: 'none' }} >
+            <ListItem alignItems="flex-start" component={Link} to={`/tracks/${_id}`}
+            sx={{ color: 'black', textDecoration: 'none', '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)' } }}>
                 <ListItemAvatar sx={{ marginRight: '10px' }}>
                     <ImageCardMedia image={cardImage}/>
                 </ListItemAvatar>
@@ -56,6 +79,16 @@ const AlbumItem: React.FC<Props> = ({_id, title, image, issueDate}) => {
                     }
                 />
             </ListItem>
+            {user && user.role === 'admin' && (
+                <>
+                    <IconButton onClick={handleTogglePublished} disabled={publishing} color="primary">
+                        <PublishIcon />
+                            </IconButton>
+                        <IconButton onClick={handleDelete} disabled={deleting} color="error">
+                                <DeleteIcon />
+                        </IconButton>
+                </>
+            )}
             <Divider variant="inset" component="li" />
         </List>
     );
