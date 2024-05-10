@@ -14,20 +14,17 @@ export const fetchTracks = createAsyncThunk<Track[], string>(
 export const createTrack = createAsyncThunk<void, TrackMutation>(
     'tracks/createTrack',
     async (trackMutation) => {
-        const formData = new FormData();
-
-        const keys = Object.keys(trackMutation) as (keyof TrackMutation)[];
-
-        keys.forEach(key => {
-            const value = trackMutation[key];
-            if (value !== null) {
-                formData.append(key, value);
+        const jsonData = JSON.stringify(trackMutation);
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
             }
-        });
+        };
 
-        return axiosApi.post('/tracks', formData);
+        return axiosApi.post('/tracks', jsonData, config);
     }
 );
+
 
 export const togglePublished = createAsyncThunk<Track, string>(
     'tracks/togglePublished',

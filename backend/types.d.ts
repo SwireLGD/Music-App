@@ -4,6 +4,7 @@ export interface TrackMutation {
     album: string;
     title: string;
     duration?: string;
+    number: number;
     isPublished: boolean;
 }
 
