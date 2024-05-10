@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { AlbumMutation } from "../../../types";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { selectArtists } from "../../artists/artistsSlice";
-import { selectUser } from "../../users/usersSlice";
 import { fetchArtists } from "../../artists/artistsThunks";
-import { Button, Grid, MenuItem, TextField } from "@mui/material";
+import { Button, CircularProgress, Grid, MenuItem, TextField } from "@mui/material";
 import FileInput from "../../../components/UI/FileInput/FileInput";
+import { selectCreateLoading } from "../albumsSlice";
 
 interface Props {
     onSubmit: (mutation: AlbumMutation) => void;
@@ -14,7 +14,7 @@ interface Props {
 const AlbumForm: React.FC<Props> = ({ onSubmit }) => {
     const dispatch = useAppDispatch();
     const artists = useAppSelector(selectArtists);
-    const user = useAppSelector(selectUser);
+    const isCreating = useAppSelector(selectCreateLoading);
     const [state, setState] = useState<AlbumMutation>({
         title: '',
         image: null,
@@ -108,6 +108,7 @@ const AlbumForm: React.FC<Props> = ({ onSubmit }) => {
                     }}
                 />
                 </Grid>
+
                 <Grid item xs>
                 <FileInput
                     onChange={fileInputChangeHandler}
@@ -117,7 +118,11 @@ const AlbumForm: React.FC<Props> = ({ onSubmit }) => {
                 </Grid>
 
                 <Grid item xs>
-                    <Button type="submit" color="primary" variant="contained">Create</Button>
+                    {isCreating ? (
+                        <CircularProgress />
+                    ) : (
+                        <Button type="submit" color="primary" variant="contained">Create</Button>
+                    )}
                 </Grid>
             </Grid>
         </form>

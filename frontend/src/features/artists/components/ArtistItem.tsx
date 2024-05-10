@@ -12,6 +12,7 @@ import {Link} from "react-router-dom";
 interface Props {
     id: string;
     name: string;
+    info: string;
     image: string | null;
 }
 
@@ -20,7 +21,7 @@ const ImageCardMedia = styled(CardMedia)({
     paddingTop: '56.25%' 
 });
 
-const ArtistItem: React.FC<Props> = ({id, name, image}) => {
+const ArtistItem: React.FC<Props> = ({id, name, image, info}) => {
     let cardImage = imageNotAvailable;
 
     if (image) {
@@ -35,6 +36,7 @@ const ArtistItem: React.FC<Props> = ({id, name, image}) => {
                 </ListItemAvatar>
                 <ListItemText
                     primary={name}
+                    secondary={info}
                 />
             </ListItem>
             <Divider variant="inset" component="li" />

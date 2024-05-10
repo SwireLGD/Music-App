@@ -1,6 +1,7 @@
 export interface Artist {
     _id: string;
     name: string;
+    info: string;
     image: string | null;
     isPublished: boolean;
 }
@@ -78,4 +79,10 @@ export interface AlbumMutation {
     image: string | null;
     issueDate: number;
     artist: string;
+}
+
+export interface ArtistMutation {
+    name: string;
+    info: string;
+    image: string | null;
 }

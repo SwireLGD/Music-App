@@ -5,14 +5,10 @@ import axios from "axios";
 
 export const playTrack = createAsyncThunk(
     'trackHistory/playTrack',
-    async ({trackId, token}: PlayTrack, {rejectWithValue}) => {
+    async ({trackId}: PlayTrack, {rejectWithValue}) => {
         try {
             const response = await axiosApi.post('/track_history', {
-                track: trackId }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+                track: trackId });
 
             return response.data;
         } catch (e) {
@@ -27,13 +23,9 @@ export const playTrack = createAsyncThunk(
 
 export const fetchTrackHistory = createAsyncThunk(
     'trackHistory/fetchTrackHistory',
-    async (token: string, {rejectWithValue}) => {
+    async (_, {rejectWithValue}) => {
         try {
-            const response = await axiosApi.get('/track_history', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const response = await axiosApi.get('/track_history');
 
             return response.data;
         } catch (e) {

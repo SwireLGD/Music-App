@@ -12,7 +12,7 @@ interface AlbumState {
 const initialState: AlbumState = {
     items: [],
     fetchLoading: false,
-    createLoading: false
+    createLoading: false,
 };
 
 export const albumsSlice = createSlice({
