@@ -42,7 +42,7 @@ const Tracks = () => {
         artistName = tracks[0].album.artist.name;
         albumName = tracks[0].album.title;
         if (tracks[0].album.image) {
-            cardImage = apiURL + tracks[0].album.image;
+            cardImage = apiURL + '/public/' + tracks[0].album.image;
         }
     }
 

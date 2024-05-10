@@ -21,17 +21,17 @@ const run = async () => {
 
     const [artist1, artist2, artist3] = await Artist.create({
         name: 'Within Temptation',
-        image: '/public/fixtures/withinTemptation.jpg',
+        image: 'fixtures/withinTemptation.jpg',
         info: 'Dutch symphonic metal band',
         isPublished: true
     },  {
         name: 'DROELOE',
-        image: '/public/fixtures/droeloe.jpg',
+        image: 'fixtures/droeloe.jpg',
         info: 'Dutch electronic music project by Vincent Rooijers',
         isPublished: true
     }, {
         name: 'Ado',
-        image: '/public/fixtures/ado.jpg',
+        image: 'fixtures/ado.jpg',
         info: 'A Japanese singer. In 2020, at the age of 17, she made her debut with the digital single titled Usseewa',
         isPublished: false
     }
@@ -42,31 +42,31 @@ const run = async () => {
         title: 'Wireless',
         artist: artist1._id,
         issueDate: '1688083200',
-        image: '/public/fixtures/wireless.jpg',
+        image: 'fixtures/wireless.jpg',
         isPublished: true
     } , {
         title: 'Bleed Out',
         artist: artist1._id,
         issueDate: '1697760000',
-        image: '/public/fixtures/bleedOut.jpg',
+        image: 'fixtures/bleedOut.jpg',
         isPublished: true
     }, {
         title: 'A promise is made',
         artist: artist2._id,
         issueDate: '1570752000',
-        image: '/public/fixtures/aPromiseIsMade.jpg',
+        image: 'fixtures/aPromiseIsMade.jpg',
         isPublished: true
     }, {
         title: 'A matter of perspective',
         artist: artist2._id,
         issueDate: '1605225600',
-        image: '/public/fixtures/aMatterOfPerspective.jpg',
+        image: 'fixtures/aMatterOfPerspective.jpg',
         isPublished: true
     }, {
         title: 'Kyogen',
         artist: artist3._id,
         issueDate: '1643155200',
-        image: '/public/fixtures/kyogen.jpg',
+        image: 'fixtures/kyogen.jpg',
         isPublished: false
     });
 

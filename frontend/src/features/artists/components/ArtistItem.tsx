@@ -17,14 +17,14 @@ interface Props {
 
 const ImageCardMedia = styled(CardMedia)({
     height: 0,
-    paddingTop: '56.25%' //16:9
+    paddingTop: '56.25%' 
 });
 
 const ArtistItem: React.FC<Props> = ({id, name, image}) => {
     let cardImage = imageNotAvailable;
 
     if (image) {
-        cardImage = apiURL + image;
+        cardImage = apiURL + '/public/' + image;
     }
 
     return (

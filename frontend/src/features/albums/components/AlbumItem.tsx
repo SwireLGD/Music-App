@@ -27,7 +27,7 @@ const AlbumItem: React.FC<Props> = ({_id, title, image, issueDate}) => {
     let cardImage = imageNotAvailable;
 
     if (image) {
-        cardImage = apiURL + image;
+        cardImage = apiURL + '/public/' + image;
     }
 
     const formattedDate = new Date(issueDate * 1000).toLocaleDateString("en-US", {
