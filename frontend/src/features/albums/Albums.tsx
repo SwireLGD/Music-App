@@ -51,7 +51,7 @@ const Albums = () => {
                 </Grid>
             ) : (
                 <Grid item>
-                    <Typography>No published albums.</Typography>
+                    <Typography>No albums available.</Typography>
                 </Grid>
             )}
         </Grid>

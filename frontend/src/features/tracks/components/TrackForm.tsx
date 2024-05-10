@@ -4,7 +4,7 @@ import { TrackMutation } from "../../../types";
 import { selectAlbums } from "../../albums/albumsSlice";
 import { selectCreateLoading } from "../tracksSlice";
 import { fetchAlbums } from "../../albums/albumsThunks";
-import { Button, CircularProgress, Grid, MenuItem, TextField } from "@mui/material";
+import { Button, CircularProgress, Grid, MenuItem, TextField, duration } from "@mui/material";
 import { selectArtists } from "../../artists/artistsSlice";
 
 interface Props {
@@ -29,14 +29,29 @@ const TrackForm: React.FC<Props> = ({ onSubmit }) => {
         }
     }, [dispatch, selectedArtist]);
 
+    const validateDuration = (duration: string) => {
+        const pattern = /^\d{1,2}:\d{2}$/;
+        return pattern.test(duration);
+    };
+
     const submitFormHandler = (e: React.FormEvent) => {
         e.preventDefault();
+        if (!state.title || !state.album || !state.duration) {
+            alert('All fields are required.');
+            return;
+        }
+
+        if (!validateDuration(state.duration)) {
+            alert("Invalid duration format. Please use MM:SS.");
+            return;
+        }
+
         onSubmit(state);
     };
 
     const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const name = e.target.name;
-        const value = e.target.value;
+        const value = e.target.value
 
         setState(prevState => {
             return {...prevState, [name]: value};

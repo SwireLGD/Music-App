@@ -21,15 +21,18 @@ const TrackSchema = new Schema({
     },
     number: {
         type: Number,
+        required: true
     },
     isPublished: {
         type: Boolean,
         default: false
     }
+}, {
+    validateBeforeSave: false, 
 });
 
-TrackSchema.pre('save', async function(next) {
-    if (this.isNew) {
+TrackSchema.pre('save', async function (next) {
+    if (!this.number && this.isNew) {
         const count = await Track.countDocuments({ album: this.album });
         this.number = count + 1;
     }

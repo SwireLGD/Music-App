@@ -71,6 +71,7 @@ const Tracks = () => {
                     {filteredTracks.map(track => (
                         <TrackItem
                             key={track._id}
+                            id={track._id}
                             trackId={track._id}
                             number={track.number}
                             title={track.title}

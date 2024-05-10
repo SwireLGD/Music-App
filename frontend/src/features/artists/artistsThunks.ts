@@ -26,7 +26,8 @@ export const createArtist = createAsyncThunk<void, ArtistMutation>(
             }
         });
 
-        return axiosApi.post('/artists', formData);
+        const response = await axiosApi.post('/artists', formData);
+        return response.data;
     }
 );
 

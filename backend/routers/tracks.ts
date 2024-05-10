@@ -31,7 +31,6 @@ tracksRouter.post('/', auth, async (req, res) => {
         title: req.body.title,
         album: req.body.album,
         duration: req.body.duration,
-        number: req.body.number,
         isPublished: false,
     };
 
