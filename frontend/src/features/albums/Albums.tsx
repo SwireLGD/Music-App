@@ -15,7 +15,7 @@ const Albums = () => {
     const artistName = albums.length > 0 ? albums[0].artist.name : "Artist";
     const isLoading = useAppSelector(selectFetchLoading);
     const user = useAppSelector(selectUser);
-    const userRole = user?.role;
+    const userId = user?._id;
 
     useEffect(() => {
         if  (artistId) {
@@ -23,9 +23,9 @@ const Albums = () => {
         }
     }, [artistId, dispatch]);
 
-    const canSeeUnpublished = userRole === 'admin';
-
-    const filteredAlbums = albums.filter(album => canSeeUnpublished || album.isPublished);
+    const filteredAlbums = albums.filter(album =>
+        album.isPublished || (user?.role === 'admin') || (album.userId === userId && !album.isPublished)
+    );
 
     return (
         <Grid container direction="column" gap={2}>
@@ -46,6 +46,8 @@ const Albums = () => {
                             artist={album.artist}
                             image={album.image}
                             issueDate={album.issueDate}
+                            userId={album.userId}
+                            isPublished={album.isPublished}
                         />
                     ))}
                 </Grid>

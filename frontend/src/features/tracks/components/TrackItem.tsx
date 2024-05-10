@@ -1,4 +1,4 @@
-import {Button, IconButton, Typography} from "@mui/material";
+import {Button, CircularProgress, IconButton, Typography} from "@mui/material";
 import * as React from "react";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -18,9 +18,11 @@ interface Props {
     title: string;
     duration: string;
     trackId: string;
+    isPublished: boolean;
+    userId: string;
 }
 
-const TrackItem: React.FC<Props> = ({id, number, title, duration, trackId}) => {
+const TrackItem: React.FC<Props> = ({id, number, title, duration, trackId, userId, isPublished}) => {
     const user = useAppSelector(selectUser);
     const dispatch = useAppDispatch();
     const publishing = useAppSelector(selectPublishing);
@@ -43,6 +45,9 @@ const TrackItem: React.FC<Props> = ({id, number, title, duration, trackId}) => {
         navigate('/');
     };
 
+    const canDelete = user?.role === 'admin' || (user?._id === userId && !isPublished);
+    const canTogglePublish = user?.role === 'admin';
+
     return (
         <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
             <ListItem secondaryAction={
@@ -58,15 +63,15 @@ const TrackItem: React.FC<Props> = ({id, number, title, duration, trackId}) => {
                     </Typography>
                 } />
             </ListItem>
-            {user && user.role === 'admin' && (
-                <>
-                    <IconButton onClick={handleTogglePublished} disabled={publishing} color="primary">
-                        <PublishIcon />
-                            </IconButton>
-                        <IconButton onClick={handleDelete} disabled={deleting} color="error">
-                            <DeleteIcon />
-                        </IconButton>
-                </>
+            {canDelete && (
+                <IconButton onClick={handleDelete} disabled={deleting} color="error">
+                    {deleting ? <CircularProgress size={24} /> : <DeleteIcon />}
+                </IconButton>
+            )}
+            {canTogglePublish && (
+                <IconButton onClick={handleTogglePublished} disabled={publishing} color="primary">
+                    {publishing ? <CircularProgress size={24} /> : <PublishIcon />}
+                </IconButton>
             )}
         </List>
     );

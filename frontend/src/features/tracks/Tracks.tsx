@@ -16,7 +16,7 @@ const Tracks = () => {
     const isLoading = useAppSelector(selectFetchLoading);
     const user = useAppSelector(selectUser); 
     const navigate = useNavigate();
-    const userRole = user?.role;
+    const userId = user?._id;
 
     useEffect(() => {
         if (!user) {
@@ -47,10 +47,9 @@ const Tracks = () => {
         }
     }
 
-    const canSeeUnpublished = userRole === 'admin';
-
-    const filteredTracks = tracks.filter(track => canSeeUnpublished || track.isPublished);
-
+    const filteredTracks = tracks.filter(track =>
+        track.isPublished || (user?.role === 'admin') || (track.userId === userId && !track.isPublished)
+    );
 
     return (
         <Grid container direction="column" gap={2}>
@@ -76,6 +75,8 @@ const Tracks = () => {
                             number={track.number}
                             title={track.title}
                             duration={track.duration}
+                            isPublished={track.isPublished}
+                            userId={track.userId}
                         />
                     ))}
                 </Grid>

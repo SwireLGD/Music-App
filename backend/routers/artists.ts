@@ -25,7 +25,7 @@ artistsRouter.post('/', auth, imagesUpload.single('image'), async (req: RequestW
         image: req.file ? req.file.filename : null,
         info: req.body.info,
         isPublished: false,
-        user: req.user?._id
+        userId: req.user?._id
     };
 
     const artist = new Artist(artistData);
@@ -38,29 +38,29 @@ artistsRouter.post('/', auth, imagesUpload.single('image'), async (req: RequestW
     }
 });
 
-artistsRouter.delete('/:id', auth, permit('admin'), async (req: RequestWithUser, res, next) => {
+artistsRouter.delete('/:id', auth, async (req: RequestWithUser, res, next) => {
     if (!req.user) {
         return res.status(401).send({ error: 'Authentication is required' });
     }
 
     const artist = await Artist.findById(req.params.id);
 
+    if (!artist) {
+        return res.status(404).send({ error: 'Artist not found' });
+    }
+
     try {
-        const result = await Artist.deleteOne({ _id: req.params.id});
-
-        if (result.deletedCount === 0) {
-            return res.status(404).send({ error: 'Artist not found or unauthorized to delete the item' });
-        }
-
-        if (artist?.user.toString() !== req.user._id.toString()) {
+        if (req.user.role.includes('admin') || (artist.userId.toString() === req.user._id.toString() && !artist.isPublished)) {
+            const result = await Artist.deleteOne({ _id: req.params.id});
+    
+            if (result.deletedCount === 0) {
+                return res.status(404).send({ error: 'Artist not found or unauthorized to delete the item' });
+            }
+    
+            return res.status(204).send();
+        } else {
             return res.status(403).send({ error: 'You do not have permission to delete this artist' });
         }
-
-        if (artist.isPublished) {
-            return res.status(403).send({ error: 'Cannot delete a published artist' });
-        }
-
-        return res.status(204).send();
     } catch (e) {
         return next(e);
     }

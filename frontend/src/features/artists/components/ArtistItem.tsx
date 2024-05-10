@@ -6,7 +6,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import imageNotAvailable from '../../../../assets/imageNotAvailable.png';
 import {apiURL} from "../../../constants.ts";
-import {CardMedia, IconButton, styled} from "@mui/material";
+import {CardMedia, CircularProgress, IconButton, styled} from "@mui/material";
 import {Link, useNavigate} from "react-router-dom";
 import { useAppDispatch, useAppSelector } from '../../../app/hooks.ts';
 import { selectDeleting, selectPublishing } from '../artistsSlice.ts';
@@ -20,6 +20,8 @@ interface Props {
     name: string;
     info: string;
     image: string | null;
+    isPublished: boolean;
+    userId: string;
 }
 
 const ImageCardMedia = styled(CardMedia)({
@@ -27,7 +29,7 @@ const ImageCardMedia = styled(CardMedia)({
     paddingTop: '56.25%' 
 });
 
-const ArtistItem: React.FC<Props> = ({id, name, image, info}) => {
+const ArtistItem: React.FC<Props> = ({id, name, image, info, userId, isPublished}) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector(selectUser);
     const publishing = useAppSelector(selectPublishing);
@@ -52,6 +54,9 @@ const ArtistItem: React.FC<Props> = ({id, name, image, info}) => {
         navigate('/');
     };
 
+    const canDelete = user?.role === 'admin' || (user?._id === userId && !isPublished);
+    const canTogglePublish = user?.role === 'admin';
+
     return (
         <List sx={{ width: '100%', bgcolor: 'background.paper', color: 'inherit', textDecoration: 'none' }} >
             <ListItem alignItems="flex-start" component={Link} to={`/albums/${id}`} 
@@ -64,16 +69,16 @@ const ArtistItem: React.FC<Props> = ({id, name, image, info}) => {
                     secondary={info}
                 />
             </ListItem>
-            {user && user.role === 'admin' && (
-                                <>
-                                    <IconButton onClick={handleTogglePublished} disabled={publishing} color="primary">
-                                        <PublishIcon />
-                                    </IconButton>
-                                    <IconButton onClick={handleDelete} disabled={deleting} color="error">
-                                        <DeleteIcon />
-                                    </IconButton>
-                                </>
-                            )}
+            {canDelete && (
+                <IconButton onClick={handleDelete} disabled={deleting} color="error">
+                    {deleting ? <CircularProgress size={24} /> : <DeleteIcon />}
+                </IconButton>
+            )}
+            {canTogglePublish && (
+                <IconButton onClick={handleTogglePublished} disabled={publishing} color="primary">
+                    {publishing ? <CircularProgress size={24} /> : <PublishIcon />}
+                </IconButton>
+            )}
             <Divider variant="inset" component="li" />
         </List>
     );

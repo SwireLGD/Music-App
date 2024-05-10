@@ -36,7 +36,7 @@ tracksRouter.post('/', auth, async (req: RequestWithUser, res) => {
         album: req.body.album,
         duration: req.body.duration,
         isPublished: false,
-        user: req.user?._id
+        userId: req.user?._id
     };
 
     const track = new Track(trackData);
@@ -49,29 +49,29 @@ tracksRouter.post('/', auth, async (req: RequestWithUser, res) => {
     }
 });
 
-tracksRouter.delete('/:id', auth, permit('admin'), async (req: RequestWithUser, res, next) => {
+tracksRouter.delete('/:id', auth, async (req: RequestWithUser, res, next) => {
     if (!req.user) {
         return res.status(401).send({ error: 'Authentication is required' });
     }
 
     const track = await Track.findById(req.params.id);
 
+    if (!track) {
+        return res.status(404).send({ error: 'Track not found' });
+    }
+
     try {
-        const result = await Track.deleteOne({ _id: req.params.id});
-
-        if (result.deletedCount === 0) {
-            return res.status(404).send({ error: 'Track not found or unauthorized to delete the item' });
-        }
-
-        if (track?.user.toString() !== req.user._id.toString()) {
+        if (req.user.role.includes('admin') || (track.userId.toString() === req.user._id.toString() && !track.isPublished)) {
+            const result = await Track.deleteOne({ _id: req.params.id });
+    
+            if (result.deletedCount === 0) {
+                return res.status(404).send({ error: 'Track not found or already deleted' });
+            }
+    
+            return res.status(204).send();
+        } else {
             return res.status(403).send({ error: 'You do not have permission to delete this track' });
         }
-
-        if (track.isPublished) {
-            return res.status(403).send({ error: 'Cannot delete a published track' });
-        }
-
-        return res.status(204).send();
     } catch (e) {
         return next(e);
     }

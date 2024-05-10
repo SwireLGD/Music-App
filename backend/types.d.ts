@@ -5,7 +5,7 @@ export interface TrackMutation {
     title: string;
     duration?: string;
     isPublished: boolean;
-    user: Types.ObjectId;
+    userId: Types.ObjectId;
 }
 
 export interface ArtistMutation {
@@ -13,7 +13,7 @@ export interface ArtistMutation {
     image?: string | null;
     info?: string;
     isPublished: boolean;
-    user: Types.ObjectId;
+    userId: Types.ObjectId;
 }
 
 export interface AlbumMutation {
@@ -22,7 +22,7 @@ export interface AlbumMutation {
     issueDate: number;
     image?: string | null;
     isPublished: boolean;
-    user: Types.ObjectId;
+    userId: Types.ObjectId;
 }
 
 export interface UserFields {

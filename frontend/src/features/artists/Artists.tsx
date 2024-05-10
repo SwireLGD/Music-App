@@ -11,16 +11,15 @@ const Artists = () => {
     const artists = useAppSelector(selectArtists);
     const isLoading = useAppSelector(selectFetchLoading);
     const user = useAppSelector(selectUser);
-    const userRole = user?.role;
-
+    const userId = user?._id;
 
     useEffect(() => {
         dispatch(fetchArtists());
     }, [dispatch]);
 
-    const canSeeUnpublished = userRole === 'admin';
-
-    const filteredArtists = artists.filter(artist => canSeeUnpublished || artist.isPublished);
+    const filteredArtists = artists.filter(artist =>
+        artist.isPublished || (user?.role === 'admin') || (artist.userId === userId && !artist.isPublished)
+    );
 
     return (
         <Grid container direction="column" gap={2}>
@@ -38,6 +37,8 @@ const Artists = () => {
                                 name={artist.name}
                                 info={artist.info}
                                 image={artist.image}
+                                userId={artist.userId}
+                                isPublished={artist.isPublished}
                             />
                         ))
                     ) : (
