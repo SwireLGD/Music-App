@@ -39,13 +39,17 @@ albumsRouter.get('/:id', async (req, res) => {
     }
 });
 
-albumsRouter.post('/', auth, imagesUpload.single('image'), async (req, res) => {
+albumsRouter.post('/', auth, imagesUpload.single('image'), async (req: RequestWithUser, res) => {
+    if (!req.user) {
+        return res.status(401).send({ error: 'User must be authenticated.' });
+    }
     const albumData: AlbumMutation = {
         title: req.body.title,
         artist: req.body.artist,
         issueDate: req.body.issueDate,
         image: req.file ? req.file.filename : null,
-        isPublished: false
+        isPublished: false,
+        user: req.user?._id
     };
 
     const album = new Album(albumData);
@@ -62,11 +66,24 @@ albumsRouter.delete('/:id', auth, permit('admin'), async (req: RequestWithUser, 
     if (!req.user) {
         return res.status(401).send({ error: 'Authentication is required' });
     }
+
+    const album = await Album.findById(req.params.id);
+
     try {
         const result = await Album.deleteOne({ _id: req.params.id});
+
         if (result.deletedCount === 0) {
             return res.status(404).send({ error: 'Album not found or unauthorized to delete the item' });
         }
+
+        if (album?.user.toString() !== req.user._id.toString()) {
+            return res.status(403).send({ error: 'You do not have permission to delete this album' });
+        }
+
+        if (album.isPublished) {
+            return res.status(403).send({ error: 'Cannot delete a published album' });
+        }
+
         return res.status(204).send();
     } catch (e) {
         return next(e);

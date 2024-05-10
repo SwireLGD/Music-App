@@ -26,12 +26,17 @@ tracksRouter.get('/', async (req, res) => {
     }
 });
 
-tracksRouter.post('/', auth, async (req, res) => {
+tracksRouter.post('/', auth, async (req: RequestWithUser, res) => {
+    if (!req.user) {
+        return res.status(401).send({ error: 'User must be authenticated.' });
+    }
+    
     const trackData: TrackMutation = {
         title: req.body.title,
         album: req.body.album,
         duration: req.body.duration,
         isPublished: false,
+        user: req.user?._id
     };
 
     const track = new Track(trackData);
@@ -48,11 +53,24 @@ tracksRouter.delete('/:id', auth, permit('admin'), async (req: RequestWithUser, 
     if (!req.user) {
         return res.status(401).send({ error: 'Authentication is required' });
     }
+
+    const track = await Track.findById(req.params.id);
+
     try {
         const result = await Track.deleteOne({ _id: req.params.id});
+
         if (result.deletedCount === 0) {
             return res.status(404).send({ error: 'Track not found or unauthorized to delete the item' });
         }
+
+        if (track?.user.toString() !== req.user._id.toString()) {
+            return res.status(403).send({ error: 'You do not have permission to delete this track' });
+        }
+
+        if (track.isPublished) {
+            return res.status(403).send({ error: 'Cannot delete a published track' });
+        }
+
         return res.status(204).send();
     } catch (e) {
         return next(e);

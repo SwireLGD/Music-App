@@ -1,5 +1,6 @@
 import {Schema, model, Types} from 'mongoose';
 import Album from "./Album";
+import User from './User';
 
 const TrackSchema = new Schema({
     title: {
@@ -26,7 +27,16 @@ const TrackSchema = new Schema({
     isPublished: {
         type: Boolean,
         default: false
-    }
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+        validate: {
+            validator: async (value: Types.ObjectId) => User.findById(value),
+            message: 'User does not exist!',
+        }
+    },
 }, {
     validateBeforeSave: false, 
 });
