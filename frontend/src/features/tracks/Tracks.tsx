@@ -16,6 +16,7 @@ const Tracks = () => {
     const isLoading = useAppSelector(selectFetchLoading);
     const user = useAppSelector(selectUser); 
     const navigate = useNavigate();
+    const userRole = user?.role;
 
     useEffect(() => {
         if (!user) {
@@ -46,15 +47,18 @@ const Tracks = () => {
         }
     }
 
+    const canSeeUnpublished = userRole === 'admin';
+
+    const filteredTracks = tracks.filter(track => canSeeUnpublished || track.isPublished);
+
+
     return (
         <Grid container direction="column" gap={2}>
             <Grid item container justifyContent="space-between" alignItems="center">
                 <Grid item>
                     <Typography variant="h4">{artistName}</Typography>
-                    <ImageCardMedia
-                        image={cardImage}
-                    />
-                    <Typography variant="h4">{albumName}</Typography>
+                    <ImageCardMedia image={cardImage} />
+                    <Typography variant="h5">{albumName}</Typography>
                 </Grid>
             </Grid>
 
@@ -62,9 +66,9 @@ const Tracks = () => {
                 <Grid item container justifyContent="center">
                     <CircularProgress />
                 </Grid>
-            ) : (
+            ) : filteredTracks.length > 0 ? (
                 <Grid item container gap={2}>
-                    {tracks.map(track => (
+                    {filteredTracks.map(track => (
                         <TrackItem
                             key={track._id}
                             trackId={track._id}
@@ -73,6 +77,10 @@ const Tracks = () => {
                             duration={track.duration}
                         />
                     ))}
+                </Grid>
+            ) : (
+                <Grid item>
+                    <Typography>No tracks available.</Typography>
                 </Grid>
             )}
         </Grid>

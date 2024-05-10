@@ -86,3 +86,9 @@ export interface ArtistMutation {
     info: string;
     image: string | null;
 }
+
+export interface TrackMutation {
+    title: string;
+    duration: string;
+    album: string;
+}

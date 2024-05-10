@@ -29,6 +29,14 @@ const TrackSchema = new Schema({
     }
 });
 
+TrackSchema.pre('save', async function(next) {
+    if (this.isNew) {
+        const count = await Track.countDocuments({ album: this.album });
+        this.number = count + 1;
+    }
+    next();
+});
+
 const Track = model('Track', TrackSchema);
 
 export default Track;
