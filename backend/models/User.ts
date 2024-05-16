@@ -9,15 +9,15 @@ interface IUser extends UserFields, mongoose.Document {}
 
 const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
 
-    username: {
+    email: {
         type: String,
         required: true,
         unique: true,
         validate: {
-            validator: async function(this: HydratedDocument<IUser>, username: string): Promise<boolean> {
-                if (!this.isModified('username')) return true;
+            validator: async function(this: HydratedDocument<IUser>, email: string): Promise<boolean> {
+                if (!this.isModified('email')) return true;
 
-                const user = await User.findOne({ username });
+                const user = await User.findOne({ email });
                 return !user;
             },
             message: 'This user is already registered'
@@ -36,7 +36,12 @@ const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
         required: true,
         default: 'user',
         enum: ['user', 'admin']
-      }
+    },
+    displayName: {
+        type: String,
+        required: true
+    },
+    googleID: String,
 });
 
 UserSchema.methods.checkPassword = function(password) {

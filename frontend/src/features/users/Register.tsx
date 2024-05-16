@@ -1,11 +1,12 @@
-import {useState} from "react";
-import {RegisterMutation} from "../../types";
-import {Avatar, Box, Button, Container, Grid, Link, TextField, Typography} from "@mui/material";
+import React, { useState } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { RegisterMutation } from '../../types';
+import { Avatar, Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import {Link as RouterLink, useNavigate} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
-import {selectRegisterError} from "./usersSlice.ts";
-import {register} from "./usersThunks.ts";
+import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
+import { selectRegisterError } from './usersSlice.ts';
+import { register, googleLogin } from './usersThunks.ts';
+import { GoogleLogin } from '@react-oauth/google';
 
 const Register = () => {
     const dispatch = useAppDispatch();
@@ -13,15 +14,18 @@ const Register = () => {
     const navigate = useNavigate();
 
     const [state, setState] = useState<RegisterMutation>({
-        username: '',
+        email: '',
         password: '',
     });
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = event.target;
-        setState(prevState => {
-            return {...prevState, [name]: value};
-        });
+        const { name, value } = event.target;
+        setState(prevState => ({ ...prevState, [name]: value }));
+    };
+
+    const googleLoginHandler = async (credential: string) => {
+        await dispatch(googleLogin(credential)).unwrap();
+        navigate('/');
     };
 
     const submitFormHandler = async (event: React.FormEvent) => {
@@ -31,7 +35,6 @@ const Register = () => {
             navigate('/');
         } catch (error) {
             console.error(error);
-            
         }
     };
 
@@ -53,23 +56,35 @@ const Register = () => {
                     alignItems: 'center',
                 }}
             >
-                <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-                    <LockOutlinedIcon/>
+                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                    <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Sign up
                 </Typography>
-                <Box component="form" onSubmit={submitFormHandler} sx={{mt: 3}}>
+                <Box>
+                    <GoogleLogin
+                        onSuccess={(credentialResponse) => {
+                            if (credentialResponse.credential) {
+                                void googleLoginHandler(credentialResponse.credential);
+                            }
+                        }}
+                        onError={() => {
+                            console.log('Login error');
+                        }}
+                    />
+                </Box>
+                <Box component="form" onSubmit={submitFormHandler} sx={{ mt: 3 }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
-                                label="Username"
-                                name="username"
-                                autoComplete="new-username"
-                                value={state.username}
+                                label="E-mail"
+                                name="email"
+                                autoComplete="new-email"
+                                value={state.email}
                                 onChange={inputChangeHandler}
-                                error={Boolean(getFieldError('username'))}
-                                helperText={getFieldError('username')}
+                                error={Boolean(getFieldError('email'))}
+                                helperText={getFieldError('email')}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -89,7 +104,7 @@ const Register = () => {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        sx={{mt: 3, mb: 2}}
+                        sx={{ mt: 3, mb: 2 }}
                     >
                         Sign Up
                     </Button>
@@ -105,4 +120,5 @@ const Register = () => {
         </Container>
     );
 };
+
 export default Register;

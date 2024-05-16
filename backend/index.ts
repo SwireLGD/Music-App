@@ -22,7 +22,7 @@ app.use('/users', usersRouter);
 app.use('/track_history', trackHistoryRouter);
 
 const run = async () => {
-    await mongoose.connect(config.db);
+    await mongoose.connect(config.mongoose.db);
 
     app.listen(port, () => {
         console.log(`Port: ${port}`);

@@ -26,11 +26,12 @@ export interface AlbumMutation {
 }
 
 export interface UserFields {
-    username: string;
+    email: string;
     password: string;
     token: string;
     role: string;
-    isPublished: boolean;
+    displayName: string;
+    googleID?: string;
 }
 
 interface UserMethods {

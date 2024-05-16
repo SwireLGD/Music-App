@@ -5,11 +5,11 @@ import {isAxiosError} from "axios";
 import { unsetUser } from "./usersSlice.ts";
 import { RootState } from "../../app/store.ts";
 
-export const register = createAsyncThunk<User, { username: string, password: string }, { rejectValue: ValidationError }>(
+export const register = createAsyncThunk<User, { email: string, password: string }, { rejectValue: ValidationError }>(
     'users/register',
-    async ({ username, password }, { rejectWithValue }) => {
+    async ({ email, password }, { rejectWithValue }) => {
         try {
-            const response = await axiosApi.post<User>('/users', { username, password });
+            const response = await axiosApi.post<User>('/users', { email, password });
             return response.data;
         } catch (error) {
             if (isAxiosError(error) && error.response && error.response.status === 422) {
@@ -26,6 +26,22 @@ export const login = createAsyncThunk<User, LoginMutation, {rejectValue: GlobalE
     async (loginMutation, {rejectWithValue}) => {
         try {
             const response = await axiosApi.post<RegisterResponse>('/users/sessions', loginMutation);
+            return response.data.user;
+        } catch (e) {
+            if (isAxiosError(e) && e.response && e.response.status === 400) {
+                return rejectWithValue(e.response.data as GlobalError);
+            }
+
+            throw e;
+        }
+    }
+);
+
+export const googleLogin = createAsyncThunk<User, string, {rejectValue: GlobalError}>(
+    'users/googleLogin',
+    async (credential, {rejectWithValue}) => {
+        try {
+            const response = await axiosApi.post<RegisterResponse>('/users/google', {credential});
             return response.data.user;
         } catch (e) {
             if (isAxiosError(e) && e.response && e.response.status === 400) {

@@ -5,15 +5,17 @@ import { Avatar, Box, Button, Container, Grid, Link, TextField, Typography } fro
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import {useAppDispatch, useAppSelector} from "../../app/hooks.ts";
 import {selectLoginError} from "./usersSlice.ts";
-import {login} from "./usersThunks.ts";
+import {googleLogin, login} from "./usersThunks.ts";
 import {Alert} from "@mui/lab";
+import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
     const dispatch = useAppDispatch();
     const error = useAppSelector(selectLoginError);
     const navigate = useNavigate();
+    
     const [state, setState] = useState<LoginMutation>({
-        username: '',
+        email: '',
         password: '',
     });
 
@@ -22,11 +24,16 @@ const Login = () => {
         setState(prevState => ({...prevState, [name]: value}));
     };
 
+    const googleLoginHandler = async (credential: string) => {
+        await dispatch(googleLogin(credential)).unwrap();
+        navigate('/');
+    };
+
     const submitFormHandler = async (event: React.FormEvent) => {
         event.preventDefault();
         await dispatch(login(state)).unwrap();
         navigate('/');
-    }
+    };
 
     return (
         <Container component="main" maxWidth="xs">
@@ -52,14 +59,26 @@ const Login = () => {
                         {error.error}
                     </Alert>
                 )}
+                <Box sx={{pt: 2}}>
+                    <GoogleLogin 
+                        onSuccess={(credentialResponse) => {
+                            if (credentialResponse.credential) {
+                                void googleLoginHandler(credentialResponse.credential);
+                            }
+                        }}
+                        onError={() => {
+                            console.log('Login error');
+                        }}
+                    />
+                </Box>
                 <Box component="form" onSubmit={submitFormHandler} sx={{mt: 3}}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
-                                label="Username"
-                                name="username"
-                                autoComplete="current-username"
-                                value={state.username}
+                                label="E-mail"
+                                name="email"
+                                autoComplete="current-email"
+                                value={state.email}
                                 onChange={inputChangeHandler}
                             />
                         </Grid>
