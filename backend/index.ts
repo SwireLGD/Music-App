@@ -17,7 +17,7 @@ app.use(express.json());
 app.use('/public', express.static('public'));
 app.use('/albums', albumsRouter);
 app.use('/artists', artistsRouter);
-app.use ('/tracks', tracksRouter);
+app.use('/tracks', tracksRouter);
 app.use('/users', usersRouter);
 app.use('/track_history', trackHistoryRouter);
 

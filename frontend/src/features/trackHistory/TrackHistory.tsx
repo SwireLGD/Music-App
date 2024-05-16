@@ -18,7 +18,7 @@ const TrackHistoryList: React.FC = () => {
 
     useEffect(() => {
         if (user?.token) {
-            dispatch(fetchTrackHistory(user.token));
+            dispatch(fetchTrackHistory());
         } else {
             navigate('/login');
         }
@@ -32,7 +32,7 @@ const TrackHistoryList: React.FC = () => {
         <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
             {trackHistory.length > 0 ? trackHistory.map(item => (
                 <TrackHistoryItem 
-                key={item._id}
+                key={item.id}
                 artist={item.artist?.name}
                 track={item.track?.title}
                 date={new Date(item.playedAt).toLocaleString()}

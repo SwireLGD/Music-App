@@ -50,7 +50,7 @@ artistsRouter.delete('/:id', auth, async (req: RequestWithUser, res, next) => {
     }
 
     try {
-        if (req.user.role.includes('admin') || (artist.userId.toString() === req.user._id.toString() && !artist.isPublished)) {
+        if (req.user.role.includes('admin') || (artist.userId?.toString() === req.user._id.toString() && !artist.isPublished)) {
             const result = await Artist.deleteOne({ _id: req.params.id});
     
             if (result.deletedCount === 0) {

@@ -61,7 +61,7 @@ tracksRouter.delete('/:id', auth, async (req: RequestWithUser, res, next) => {
     }
 
     try {
-        if (req.user.role.includes('admin') || (track.userId.toString() === req.user._id.toString() && !track.isPublished)) {
+        if (req.user.role.includes('admin') || (track.userId?.toString() === req.user._id.toString() && !track.isPublished)) {
             const result = await Track.deleteOne({ _id: req.params.id });
     
             if (result.deletedCount === 0) {

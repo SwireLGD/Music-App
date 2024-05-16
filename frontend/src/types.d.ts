@@ -27,11 +27,6 @@ export interface Track {
     userId: string;
 }
 
-export interface RegisterMutation {
-    username: string;
-    password: string;
-}
-
 export interface User {
     _id: string;
     username: string;
@@ -41,7 +36,6 @@ export interface User {
 
 export interface RegisterResponse {
     user: User;
-    message: string;
 }
 
 export interface ValidationError {
@@ -71,7 +65,7 @@ export interface PlayTrack {
 }
 
 export interface PlayedTrack {
-    _id: string;
+    id: string;
     artist: Artist;
     track: Track;
     playedAt: Date;

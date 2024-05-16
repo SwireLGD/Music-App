@@ -4,7 +4,7 @@ import { TrackMutation } from "../../../types";
 import { selectAlbums } from "../../albums/albumsSlice";
 import { selectCreateLoading } from "../tracksSlice";
 import { fetchAlbums } from "../../albums/albumsThunks";
-import { Button, CircularProgress, Grid, MenuItem, TextField, duration } from "@mui/material";
+import { Button, CircularProgress, Grid, MenuItem, TextField } from "@mui/material";
 import { selectArtists } from "../../artists/artistsSlice";
 
 interface Props {

@@ -64,7 +64,6 @@ const ArtistForm: React.FC<Props> = ({ onSubmit }) => {
                     value={state.info}
                     onChange={inputChangeHandler}
                     name="info"
-                    required
                 />
                 </Grid>
 

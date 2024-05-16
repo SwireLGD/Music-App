@@ -45,6 +45,7 @@ trackHistoryRouter.get('/', auth, async (req: RequestWithUser, res) => {
     try {
         const history = await TrackHistory.find({ user: req.user._id }).sort({ datetime: -1 }).populate('track artist');
         res.json(history.map(h => ({
+            id: h._id,
             track: h.track,
             artist: h.artist,
             playedAt: h.datetime

@@ -16,7 +16,6 @@ const ArtistSchema = new Schema({
     userId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
         validate: {
             validator: async (value: Types.ObjectId) => User.findById(value),
             message: 'User does not exist!',

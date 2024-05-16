@@ -74,7 +74,7 @@ albumsRouter.delete('/:id', auth, async (req: RequestWithUser, res, next) => {
     }
 
     try {
-        if (req.user.role.includes('admin') || (album.userId.toString() === req.user._id.toString() && !album.isPublished)) {
+        if (req.user.role.includes('admin') || (album.userId?.toString() === req.user._id.toString() && !album.isPublished)) {
             const result = await Album.deleteOne({ _id: req.params.id});
     
             if (result.deletedCount === 0) {
