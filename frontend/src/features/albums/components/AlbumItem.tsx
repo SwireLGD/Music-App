@@ -6,14 +6,13 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import imageNotAvailable from '../../../../assets/imageNotAvailable.png';
 import {apiURL} from "../../../constants.ts";
-import {CardMedia, CircularProgress, IconButton, styled, Typography} from "@mui/material";
-import {Link, useNavigate} from "react-router-dom";
+import {Button, CardMedia, CircularProgress, IconButton, styled, Typography} from "@mui/material";
+import {Link} from "react-router-dom";
 import {Artist} from "../../../types";
 import { useAppDispatch, useAppSelector } from '../../../app/hooks.ts';
 import { deleteAlbum, togglePublished } from '../albumsThunks.ts';
 import { selectUser } from '../../users/usersSlice.ts';
 import DeleteIcon from '@mui/icons-material/Delete';
-import PublishIcon from '@mui/icons-material/Publish';
 import { selectDeleting, selectPublishing } from '../albumsSlice.ts';
 
 interface Props {
@@ -36,7 +35,6 @@ const AlbumItem: React.FC<Props> = ({_id, title, image, issueDate, userId, isPub
     const user = useAppSelector(selectUser);
     const publishing = useAppSelector(selectPublishing);
     const deleting = useAppSelector(selectDeleting);
-    const navigate = useNavigate();
 
     let cardImage = imageNotAvailable;
 
@@ -50,12 +48,10 @@ const AlbumItem: React.FC<Props> = ({_id, title, image, issueDate, userId, isPub
 
     const handleDelete = () => {
         dispatch(deleteAlbum(_id));
-        navigate('/');
     };
 
     const handleTogglePublished = () => {
         dispatch(togglePublished(_id));
-        navigate('/');
     };
 
     const canDelete = user?.role === 'admin' || (user?._id === userId && !isPublished);
@@ -90,9 +86,9 @@ const AlbumItem: React.FC<Props> = ({_id, title, image, issueDate, userId, isPub
                 </IconButton>
             )}
             {canTogglePublish && (
-                <IconButton onClick={handleTogglePublished} disabled={publishing} color="primary">
-                    {publishing ? <CircularProgress size={24} /> : <PublishIcon />}
-                </IconButton>
+                <Button onClick={handleTogglePublished} disabled={publishing} color="primary" variant="outlined">
+                    {publishing ? <CircularProgress size={24} /> : (isPublished ? "Unpublish" : "Publish")}
+                </Button>
             )}
             <Divider variant="inset" component="li" />
         </List>

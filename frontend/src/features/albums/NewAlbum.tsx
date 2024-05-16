@@ -21,7 +21,6 @@ const NewAlbum = () => {
     const onFormSubmit = async (albumMutation: AlbumMutation) => {
         try {
             await dispatch(createAlbum(albumMutation)).unwrap();
-            navigate('/');
         } catch (e) {
             console.error(e);
         }
@@ -29,8 +28,8 @@ const NewAlbum = () => {
 
     return (
         <>
-        <Typography variant="h4">New album</Typography>
-        <AlbumForm onSubmit={onFormSubmit} />
+            <Typography variant="h4">New album</Typography>
+            <AlbumForm onSubmit={onFormSubmit} />
         </>
     );
 };

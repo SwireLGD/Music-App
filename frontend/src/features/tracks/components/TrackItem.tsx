@@ -7,10 +7,8 @@ import {selectUser} from "../../users/usersSlice.ts";
 import {useAppDispatch, useAppSelector} from "../../../app/hooks.ts";
 import {playTrack} from "../../trackHistory/trackHistoryThunks.ts";
 import { selectDeleting, selectPublishing } from "../tracksSlice.ts";
-import { useNavigate } from "react-router-dom";
 import { deleteTrack, togglePublished } from "../tracksThunks.ts";
 import DeleteIcon from '@mui/icons-material/Delete';
-import PublishIcon from '@mui/icons-material/Publish';
 
 interface Props {
     id: string;
@@ -27,7 +25,6 @@ const TrackItem: React.FC<Props> = ({id, number, title, duration, trackId, userI
     const dispatch = useAppDispatch();
     const publishing = useAppSelector(selectPublishing);
     const deleting = useAppSelector(selectDeleting);
-    const navigate = useNavigate();
 
     const handlePlay = () => {
         if (user?.token) {
@@ -37,12 +34,10 @@ const TrackItem: React.FC<Props> = ({id, number, title, duration, trackId, userI
 
     const handleDelete = () => {
         dispatch(deleteTrack(id));
-        navigate('/');
     };
 
     const handleTogglePublished = () => {
         dispatch(togglePublished(id));
-        navigate('/');
     };
 
     const canDelete = user?.role === 'admin' || (user?._id === userId && !isPublished);
@@ -69,9 +64,9 @@ const TrackItem: React.FC<Props> = ({id, number, title, duration, trackId, userI
                 </IconButton>
             )}
             {canTogglePublish && (
-                <IconButton onClick={handleTogglePublished} disabled={publishing} color="primary">
-                    {publishing ? <CircularProgress size={24} /> : <PublishIcon />}
-                </IconButton>
+                <Button onClick={handleTogglePublished} disabled={publishing} color="primary" variant="outlined">
+                    {publishing ? <CircularProgress size={24} /> : (isPublished ? "Unpublish" : "Publish")}
+                </Button>
             )}
         </List>
     );

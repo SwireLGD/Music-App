@@ -21,7 +21,6 @@ const NewTrack = () => {
     const onFormSubmit = async (trackMutation: TrackMutation) => {
         try {
             await dispatch(createTrack(trackMutation)).unwrap();
-            navigate('/');
         } catch (e) {
             console.error(e);
         }
@@ -29,8 +28,8 @@ const NewTrack = () => {
 
     return (
         <>
-        <Typography variant="h4">New track</Typography>
-        <TrackForm onSubmit={onFormSubmit} />
+            <Typography variant="h4">New track</Typography>
+            <TrackForm onSubmit={onFormSubmit} />
         </>
     );
 };

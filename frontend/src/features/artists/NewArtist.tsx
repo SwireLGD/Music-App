@@ -21,7 +21,6 @@ const NewArtist = () => {
     const onFormSubmit = async (artistMutation: ArtistMutation) => {
         try {
             await dispatch(createArtist(artistMutation)).unwrap();
-            navigate('/');
         } catch (e) {
             console.error(e);
         }
@@ -29,8 +28,8 @@ const NewArtist = () => {
 
     return (
         <>
-        <Typography variant="h4">New artist</Typography>
-        <ArtistForm onSubmit={onFormSubmit} />
+            <Typography variant="h4">New artist</Typography>
+            <ArtistForm onSubmit={onFormSubmit} />
         </>
     );
 };

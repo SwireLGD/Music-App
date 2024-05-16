@@ -6,14 +6,13 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import imageNotAvailable from '../../../../assets/imageNotAvailable.png';
 import {apiURL} from "../../../constants.ts";
-import {CardMedia, CircularProgress, IconButton, styled} from "@mui/material";
-import {Link, useNavigate} from "react-router-dom";
+import {Button, CardMedia, CircularProgress, IconButton, styled} from "@mui/material";
+import {Link} from "react-router-dom";
 import { useAppDispatch, useAppSelector } from '../../../app/hooks.ts';
 import { selectDeleting, selectPublishing } from '../artistsSlice.ts';
 import { selectUser } from '../../users/usersSlice.ts';
 import { deleteArtist, togglePublished } from '../artistsThunks.ts';
 import DeleteIcon from '@mui/icons-material/Delete';
-import PublishIcon from '@mui/icons-material/Publish';
 
 interface Props {
     id: string;
@@ -34,7 +33,6 @@ const ArtistItem: React.FC<Props> = ({id, name, image, info, userId, isPublished
     const user = useAppSelector(selectUser);
     const publishing = useAppSelector(selectPublishing);
     const deleting = useAppSelector(selectDeleting);
-    const navigate = useNavigate();
 
     let cardImage = imageNotAvailable;
 
@@ -45,13 +43,11 @@ const ArtistItem: React.FC<Props> = ({id, name, image, info, userId, isPublished
     const handleDelete = (event: React.MouseEvent<HTMLElement>) => {
         event.stopPropagation();
         dispatch(deleteArtist(id));
-        navigate('/');
     };
 
     const handleTogglePublished = (event: React.MouseEvent<HTMLElement>) => {
         event.stopPropagation();
         dispatch(togglePublished(id));
-        navigate('/');
     };
 
     const canDelete = user?.role === 'admin' || (user?._id === userId && !isPublished);
@@ -75,9 +71,9 @@ const ArtistItem: React.FC<Props> = ({id, name, image, info, userId, isPublished
                 </IconButton>
             )}
             {canTogglePublish && (
-                <IconButton onClick={handleTogglePublished} disabled={publishing} color="primary">
-                    {publishing ? <CircularProgress size={24} /> : <PublishIcon />}
-                </IconButton>
+                <Button onClick={handleTogglePublished} disabled={publishing} color="primary" variant="outlined">
+                    {publishing ? <CircularProgress size={24} /> : (isPublished ? "Unpublish" : "Publish")}
+                </Button>
             )}
             <Divider variant="inset" component="li" />
         </List>
