@@ -24,7 +24,7 @@ const Albums = () => {
     }, [artistId, dispatch]);
 
     const filteredAlbums = albums.filter(album =>
-        album.isPublished || (user?.role === 'admin') || (album.userId === userId && !album.isPublished)
+        album.isPublished || (user && (user.role === 'admin' || album.userId === userId))
     );
 
     return (

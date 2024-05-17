@@ -53,10 +53,12 @@ const ArtistItem: React.FC<Props> = ({id, name, image, info, userId, isPublished
     const canDelete = user?.role === 'admin' || (user?._id === userId && !isPublished);
     const canTogglePublish = user?.role === 'admin';
 
+
+
     return (
         <List sx={{ width: '100%', bgcolor: 'background.paper', color: 'inherit', textDecoration: 'none' }} >
             <ListItem alignItems="flex-start" component={Link} to={`/albums/${id}`} 
-            sx={{ color: 'black', textDecoration: 'none', '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)' } }}>
+                sx={{ color: 'black', textDecoration: 'none', '&:hover': { backgroundColor: 'rgba(0,0,0,0.04)' } }}>
                 <ListItemAvatar sx={{ marginRight: '10px' }}>
                     <ImageCardMedia image={cardImage}/>
                 </ListItemAvatar>

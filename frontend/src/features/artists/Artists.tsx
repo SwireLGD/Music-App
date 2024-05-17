@@ -18,7 +18,7 @@ const Artists = () => {
     }, [dispatch]);
 
     const filteredArtists = artists.filter(artist =>
-        artist.isPublished || (user?.role === 'admin') || (artist.userId === userId && !artist.isPublished)
+        artist.isPublished || (user && (user.role === 'admin' || artist.userId === userId))
     );
 
     return (

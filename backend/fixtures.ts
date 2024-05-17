@@ -8,7 +8,7 @@ import User from "./models/User";
 
 const run = async () => {
 
-    await mongoose.connect(config.db);
+    await mongoose.connect(config.mongoose.db);
     const db = mongoose.connection;
 
     try {
@@ -212,12 +212,14 @@ const run = async () => {
 
     await User.create({
         email: 'Swire',
-        password: '123qwerty',
+        displayName: 'Swire',
+        password: '123',
         token: crypto.randomUUID(),
         role: 'user'
     }, {
         email: 'Liliweiss',
-        password: '321qwerty',
+        displayName: 'Lilith',
+        password: '123',
         token: crypto.randomUUID(),
         role: 'admin'
     });
