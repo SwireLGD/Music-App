@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Menu, MenuItem } from '@mui/material';
+import { Avatar, Button, Menu, MenuItem } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { User } from "../../../types";
 import { useAppDispatch } from '../../../app/hooks';
 import { logout } from '../../../features/users/usersThunks';
+import { apiURL } from '../../../constants';
+import imageNotAvailable from '../../../../assets/imageNotAvailable.png';
 
 interface Props {
     user: User;
@@ -25,13 +27,20 @@ const UserMenu: React.FC<Props> = ({ user }) => {
         dispatch(logout());
     }
 
+    let cardImage = imageNotAvailable;
+
+    if (user.avatar) {
+        cardImage = apiURL + '/public/' + user.avatar;
+    }
+
     return (
         <>
             <Button
                 onClick={handleClick}
                 color="inherit"
+                startIcon={<Avatar src={cardImage} alt={user.displayName} />}
             >
-                Hello, {user.email}
+                Hello, {user.displayName}
             </Button>
             <Menu
                 anchorEl={anchorEl}

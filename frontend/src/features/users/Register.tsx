@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks.ts';
 import { selectRegisterError } from './usersSlice.ts';
 import { register, googleLogin } from './usersThunks.ts';
 import { GoogleLogin } from '@react-oauth/google';
+import FileInput from '../../components/UI/FileInput/FileInput.tsx';
 
 const Register = () => {
     const dispatch = useAppDispatch();
@@ -15,12 +16,24 @@ const Register = () => {
 
     const [state, setState] = useState<RegisterMutation>({
         email: '',
+        displayName: '',
         password: '',
+        avatar: null,
     });
 
     const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setState(prevState => ({ ...prevState, [name]: value }));
+    };
+
+    const fileInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const {name, files} = e.target;
+        if (files) {
+            setState(prevState => ({
+                ...prevState,
+                [name]: files[0],
+            }));
+        }
     };
 
     const googleLoginHandler = async (credential: string) => {
@@ -89,6 +102,17 @@ const Register = () => {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
+                                label="Nickname"
+                                name="displayName"
+                                autoComplete="displayName"
+                                value={state.displayName}
+                                onChange={inputChangeHandler}
+                                error={Boolean(getFieldError('displayName'))}
+                                helperText={getFieldError('displayName')}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
                                 name="password"
                                 label="Password"
                                 type="password"
@@ -97,6 +121,13 @@ const Register = () => {
                                 onChange={inputChangeHandler}
                                 error={Boolean(getFieldError('password'))}
                                 helperText={getFieldError('password')}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <FileInput
+                                onChange={fileInputChangeHandler}
+                                name="image"
+                                label="Image"
                             />
                         </Grid>
                     </Grid>

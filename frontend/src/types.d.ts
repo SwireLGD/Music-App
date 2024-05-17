@@ -30,13 +30,17 @@ export interface Track {
 export interface User {
     _id: string;
     email: string;
+    displayName: string;
+    avatar: string | null;
     token: string;
     role: string;
 }
 
 export interface RegisterMutation {
     email: string;
+    displayName: string;
     password: string;
+    avatar: string | null;
 }
 
 export interface RegisterResponse {

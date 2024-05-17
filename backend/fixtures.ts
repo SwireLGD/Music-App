@@ -215,13 +215,15 @@ const run = async () => {
         displayName: 'Swire',
         password: '123',
         token: crypto.randomUUID(),
-        role: 'user'
+        role: 'user',
+        avatar: 'fixtures/swire.jpg',
     }, {
         email: 'Liliweiss',
         displayName: 'Lilith',
         password: '123',
         token: crypto.randomUUID(),
-        role: 'admin'
+        role: 'admin',
+        avatar: 'fixtures/liliweiss.jpg',
     });
 
     await db.close();

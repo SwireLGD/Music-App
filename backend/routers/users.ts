@@ -3,15 +3,18 @@ import User from '../models/User';
 import { Error } from 'mongoose';
 import { OAuth2Client } from 'google-auth-library';
 import config from '../config';
+import { imagesUpload } from '../multer';
 
 const usersRouter = express.Router();
 const client = new OAuth2Client(config.google.clientId);
 
-usersRouter.post('/', async (req, res, next) => {
+usersRouter.post('/', imagesUpload.single('image'), async (req, res, next) => {
     try {
         const user = new User({
             email: req.body.email,
-            password: req.body.password
+            displayName: req.body.displayName,
+            password: req.body.password,
+            avatar: req.file ? req.file.filename : null,
         });
 
         user.generateToken();
