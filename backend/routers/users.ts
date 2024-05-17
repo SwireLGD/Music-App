@@ -1,9 +1,9 @@
 import express from 'express';
 import User from '../models/User';
-import { Error } from 'mongoose';
+import mongoose from 'mongoose';
 import { OAuth2Client } from 'google-auth-library';
 import config from '../config';
-import { imagesUpload } from '../multer';
+import { clearImages, imagesUpload } from '../multer';
 
 const usersRouter = express.Router();
 const client = new OAuth2Client(config.google.clientId);
@@ -20,13 +20,16 @@ usersRouter.post('/', imagesUpload.single('image'), async (req, res, next) => {
         user.generateToken();
         await user.save();
 
-        return res.send({message: 'Registered successfully', user});
-    } catch (error) {
-        if (error instanceof Error.ValidationError) {
-            return res.status(400).send(error);
+        return res.send({message: 'Resgistered successfully', user});
+    } catch (e) {
+        if (req.file) {
+            clearImages(req.file.filename);
         }
-
-        return next(error);
+        if (e instanceof mongoose.Error.ValidationError) {
+            return res.status(422).send(e);
+        }
+    
+        next(e);
     }
 });
 

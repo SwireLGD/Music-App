@@ -27,10 +27,10 @@ const UserMenu: React.FC<Props> = ({ user }) => {
         dispatch(logout());
     }
 
-    let cardImage = imageNotAvailable;
+    let avatar = imageNotAvailable;
 
     if (user.avatar) {
-        cardImage = apiURL + '/public/' + user.avatar;
+        avatar = apiURL + '/public/' + user.avatar;
     }
 
     return (
@@ -38,7 +38,7 @@ const UserMenu: React.FC<Props> = ({ user }) => {
             <Button
                 onClick={handleClick}
                 color="inherit"
-                startIcon={<Avatar src={cardImage} alt={user.displayName} />}
+                startIcon={<Avatar src={avatar} alt={user.displayName} />}
             >
                 Hello, {user.displayName}
             </Button>

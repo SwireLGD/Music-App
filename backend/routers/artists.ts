@@ -1,9 +1,10 @@
 import express from "express";
 import Artist from "../models/Artist";
 import {ArtistMutation} from "../types";
-import {imagesUpload} from "../multer";
+import {clearImages, imagesUpload} from "../multer";
 import auth, { RequestWithUser } from "../middleware/auth";
 import permit from "../middleware/permit";
+import mongoose from "mongoose";
 
 const artistsRouter = express.Router();
 
@@ -16,7 +17,7 @@ artistsRouter.get('/', async (req, res) => {
     }
 });
 
-artistsRouter.post('/', auth, imagesUpload.single('image'), async (req: RequestWithUser, res) => {
+artistsRouter.post('/', auth, imagesUpload.single('image'), async (req: RequestWithUser, res, next) => {
     if (!req.user) {
         return res.status(401).send({ error: 'User must be authenticated.' });
     }
@@ -34,7 +35,14 @@ artistsRouter.post('/', auth, imagesUpload.single('image'), async (req: RequestW
         await artist.save();
         return res.send(artist);
     } catch (e) {
-        return res.status(400).send(e);
+        if (req.file) {
+            clearImages(req.file.filename);
+        }
+        if (e instanceof mongoose.Error.ValidationError) {
+            return res.status(422).send(e);
+        }
+    
+        next(e);
     }
 });
 
